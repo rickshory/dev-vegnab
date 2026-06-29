@@ -1,6 +1,9 @@
 "use strict";
 
-  var swVersion = "";
+
+//const repo_name = 'vegnab-webapp' // use for public version
+const repo_name = 'dev-vegnab' // use for development version
+var swVersion = "";
 // install Service Worker here, then it will "live" in the browser
 if ('serviceWorker' in navigator) {
   // Register a service worker hosted at the root of the
@@ -9,8 +12,8 @@ if ('serviceWorker' in navigator) {
   //  Use following format to run on LocalHost
 //   navigator.serviceWorker.register('sw.js').then((registration) => {
   //  Use following format to run from GitHub
-    navigator.serviceWorker.register('/vegnab-webapp/sw.js'
-      , {scope: '/vegnab-webapp/'}).then((registration) => {
+    navigator.serviceWorker.register('/' + repo_name + '/sw.js'
+      , {scope: '/' + repo_name + '/'}).then((registration) => {
     console.log('Service worker registration succeeded:', registration);
     if (!navigator.serviceWorker.controller) {
       console.log('[main] No controller yet — reloading to allow control...');
