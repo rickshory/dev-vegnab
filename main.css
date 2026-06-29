@@ -1,0 +1,74 @@
+body {
+    overscroll-behavior: contain;
+}
+
+$font-family-sans-serif:
+  // Cross-platform generic font family (default user interface font)
+  system-ui,
+  // Safari for macOS and iOS (San Francisco)
+  -apple-system,
+  // Windows
+  "Segoe UI",
+  // Android
+  Roboto,
+  // Basic web fallback
+  "Helvetica Neue", Arial,
+  // Linux
+  "Noto Sans",
+  "Liberation Sans",
+  // Sans serif fallback
+  sans-serif,
+  // Emoji fonts
+  "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !default;
+
+body, textarea, input[type="text"], input[type="email"], input[type="number"],
+    h3, button, select {
+	font-size: 16px;
+}
+@media only screen and (max-width: 576px) {
+	body, textarea, input[type="text"], input[type="email"], input[type="number"],
+      h3, button, select {
+		font-size: 22px;
+	}
+}
+
+/* assure items don't stack horizontally */
+#match-list li,
+#sppListForCurSite li,
+#aux-specs-list-for-sites li,
+#aux-specs-list-for-spp li,
+#ph_list li,
+#old_sites_list li,
+#forget_spp_list li {
+  display: block;
+}
+
+#match-list li.prevfound {
+  background-color: white;
+}
+
+#match-list li.placeholder {
+  background-color: lightblue;
+}
+
+#match-list li.local {
+  background-color: lightgreen;
+}
+
+#match-list li.nonlocal {
+  background-color: burlywood;
+}
+
+.btn-xl {
+    padding: 10px 20px;
+    font-size: 20px;
+    border-radius: 10px;
+}
+
+input[type='file'] {
+  color: rgba(0, 0, 0, 0)
+}
+
+div.imagetiles div.col-lg-3.col-md-3.col-sm-3.col-xs-6{
+  padding: 0px;
+}

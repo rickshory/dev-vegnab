@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="en" class="h-100">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="viewport" content="width=device-width,
+      initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE" />
+    <link href="bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="bootstrap-glyphicons.css" rel="stylesheet" type="text/css">
+    <title>VegNab webapp</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon_io/favicon-16x16.png">
+    <!-- <link rel="manifest" href="/site.webmanifest"> -->
+    <!-- comment out following line to run on LocalHost, uncomment to run on GitHub -->
+    <link rel="canonical" href="https://rickshory.github.io/vegnab-webapp/" />
+    <link href="main.css" rel="stylesheet" type="text/css" />
+    <script src="regions.js" defer></script>
+    <script src="regionBounds.js" defer></script>
+    <script src="nrcs_spp.js" defer></script>
+    <script src="main.js" defer></script>
+  </head>
+  <body class="d-flex flex-column h-100">
+    <!-- begin bootstrap navbar, outside of main container -->
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark" aria-label="VegNab web app">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">VegNab web app</a>
+      <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse"
+          data-bs-target="#navbarsExample03" aria-controls="navbarsExample03"
+          aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="navbar-collapse collapse" id="navbarsExample03" style="">
+        <ul class="navbar-nav me-auto mb-2 mb-sm-0">
+          <li class="nav-item">
+            <a class="nav-link" href="#vnAuxDataListScreen" data-bs-toggle="modal">
+              Auxiliary data</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#vnPhListScreen" data-bs-toggle="modal">
+              Placeholders</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#vnSettingsScreen" data-bs-toggle="modal">
+              Settings</a>
+          </li>
+
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" 
+              id="navbarCorrectionsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Send data
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarCorrectionsDropdown">
+              <li><a class="dropdown-item" href="#vnSendDataScreen" data-bs-toggle="modal">
+                <h3>Send site data</h3></a></a></li>
+              <li><a class="dropdown-item" href="#vnSendRememberedSppScreen" data-bs-toggle="modal">
+                <h3>Send remembered species</h3></a></a></li>
+              <li><a class="dropdown-item" href="#vnUnderConstructionScreen" data-bs-toggle="modal">
+                <h3>Send placeholders list</h3></a></li>
+            </ul>
+          </li>
+
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" 
+              id="navbarCorrectionsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Fix things
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarCorrectionsDropdown">
+              <li><a class="dropdown-item" href="#vnDeleteSitesScreen" data-bs-toggle="modal">
+                <h3>Old sites</h3></a></a></li>
+              <li><a class="dropdown-item" href="#vnForgetSppScreen" data-bs-toggle="modal">
+                <h3>Remembered species</h3></a></a></li>
+              <li><a class="dropdown-item" href="#vnUnderConstructionScreen" data-bs-toggle="modal">
+                <h3>Spellings</h3></a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="#vnResetAppScreen" data-bs-toggle="modal">
+                <h3>Reset this app</h3></a></li>
+            </ul>
+          </li>
+
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" 
+              id="navbarHelpDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Help
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarHelpDropdown">
+  <!--               <li><hr class="dropdown-divider"></li> -->
+              <li><a class="dropdown-item" href="#vnHelpAboutScreen" data-bs-toggle="modal">
+                <h3>About</h3></a></li>
+              <li><a class="dropdown-item" href="#vnHelpVersionScreen" data-bs-toggle="modal">
+                <h3>Version</h3></a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <!-- end of bootstrap navbar -->
+
+  <!-- begin main screen -->
+  <div class="container-fluid">
+    <div class="d-grid gap-2">
+      <div class="dropdown">
+        <button class="btn btn-primary btn-xl dropdown-toggle"
+            type="button" id="dropdownSiteChooseOrNew"
+            name="dropdownSiteChooseOrNew"
+            data-bs-toggle="dropdown" aria-expanded="false">
+            Choose site or add new
+        </button>
+        <ul id = "chooseOrAddNewSitesList" class="dropdown-menu"
+           aria-labelledby="dropdownSiteChooseOrNew">
+          <!-- default for testing; lowercase 'add' is a clue js is not running -->
+          <li class="dropdown-item" id = "siteAddNew"><h3>(add new site)</h3></li>
+        </ul>
+      </div>
+    </div>
+    <!-- show current site and its list in a card -->
+    <div class="card">
+      <div id="siteCardHeader" class="card-header">
+        (no sites yet)
+      </div>
+      <div class="card-body">
+        <button type="button" id="btnAddSiteSpecies" class="btn btn-primary btn-xl"
+          data-bs-toggle="modal"
+          data-bs-target="#vnSppSearchScreen">
+          Add species
+        </button>
+    
+        <ul id="sppListForCurSite" class="list-unstyled">
+          <!-- default for testing capital 'N' clue that js is not running -->
+          <li id="noSpp">No species yet</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- begin modal, site info -->
+    <div id="vnSiteInfoScreen" class="modal site_info_screen">
+      <div class="modal-dialog modal-fullscreen-sm-down">
+        <div class="modal-content">
+
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h3>Site info</h3>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+            <div class="site_info_div">
+              <form  id="site_info_form" autocomplete="off">
+
+                <div class="form-floating mb-3 mt-3">
+                  <p>Site name</p>
+                  <input type="text" class="form-control form-control-lg"
+                    id="site_name">
+                </div>
+                <div class="form-group">
+                  <p>Notes</p>
+                  <textarea style="font-size:22px;" class="form-control form-control-lg"
+                    id="site_notes" rows="4"></textarea>
+                </div>
+                <button type="button" class="btn btn-primary  btn-xl"
+                  name="btn-save-site-info" id="btn-save-site-info">
+                  Save</button>
+                <div id="site_date">Site date should appear here</div>
+                <div id="site_location">Site location should appear here</div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- end of modal, site info -->
+
+    <!-- begin modal, species search -->
+    <div id="vnSppSearchScreen" class="modal spp_search_screen">
+      <div class="modal-dialog modal-fullscreen-sm-down modal-dialog-scrollable">
+        <div class="modal-content">
+
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <form class="row" id="search-form" autocomplete="off">
+              <div class="col-auto">Type to search</div>
+              <div class="col-auto">
+                <input type="text" class="form-control form-control-lg"
+                    id="search-box">
+              </div>
+            </form>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+            <div class="sppmatchlist">
+              <!-- list will be filled on-the-fly -->
+              <ul id="match-list" class="list-unstyled">
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- end of modal, species search-->
+
+    <!-- begin modal, species details -->
+    <div id="vnSppDetailScreen" class="modal spp_detail_screen">
+      <div class="modal-dialog modal-fullscreen-sm-down modal-dialog-scrollable">
+        <div class="modal-content">
+
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <div class="row">
+              <div class="col-auto">Details for:</div>
+              <div class="col-auto" id="spp-for-details">
+                <!-- will be filled in on Modal Shown -->
+                (Species name will appear here)
+              </div>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+            <div class="d-grid gap-5">
+              <button type="button" class="btn btn-primary btn-xl"
+                  id="btn-delete-spp-item">
+                  Delete this species item, entered by mistake
+              </button>
+              <button type="button" class="btn btn-primary btn-xl hide-for-ph"
+                  id="btn-mark-uncertain-spp">
+                  Mark this item as uncertain of species
+              </button>
+              <button type="button" class="btn btn-primary btn-xl hide-for-ph"
+                  id="btn-mark-uncertain-genus">
+                  Mark this item as uncertain of genus
+              </button>
+              <button type="button" class="btn btn-primary btn-xl hide-for-ph"
+                  id="btn-mark-not-uncertain">
+                  Remove any uncertainty mark for this item
+              </button>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <div class="row" id="spp-detail-location">
+              <!-- filled in on Modal Shown -->
+              Species item location will appear here
+            </div>
+            <div class="row" id="spp-detail-timestamp">
+              <!-- filled in on Modal Shown -->
+              Species item timestamp will appear here
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- end of modal, species details-->
+
+    <!-- begin modal, placeholders list -->
+    <div id="vnPhListScreen" class="modal ph_list_screen">
+      <div class="modal-dialog modal-fullscreen-sm-down modal-dialog-scrollable">
+        <div class="modal-content">
+
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h3>Placeholders</h3>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+            <div class="placeholders_list">
+              <!-- list will be filled on-the-fly -->
+              <ul id="ph_list" class="list-unstyled">
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- end of modal, placeholders list -->
+
+    <!-- begin modal, placeholder detail -->
+    <div id="vnPlaceholderInfoScreen" class="modal placeholder_info_screen">
+      <div class="modal-dialog modal-fullscreen-sm-down">
+        <div class="modal-content">
+
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h3>placeholder info</h3>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+            <div class="placeholder_info_div">
+              <form  id="placeholder_info_form" autocomplete="off">
+                <div class="form-floating mb-3 mt-3">
+                  <div id="placeholder_code_label">placeholder code will appear here</div>
+                </div>
+                <div class="form-group">
+                  <p>Keywords, to allow searching later</p>
+                  <textarea style="font-size:22px;" class="form-control form-control-lg"
+                    id="placeholder_keywords" rows="3"></textarea>
+                </div>
+                <input type="file"
+                  accept="image/*" id="ph-img-file-input" multiple
+                  style="display:none">
+                <button type="button" class="btn btn-primary  btn-xl"
+                  name="btn-add-ph-pix" id="btn-add-ph-pix">
+                  Add Pictures</button>
+                <button type="button" class="btn btn-primary  btn-xl"
+                  name="btn-save-placeholder-info" id="btn-save-placeholder-info">
+                  Save</button>
+                <div  class="image-list" id="placeholder_pix">placeholder photos should appear here</div>
+                <div id="placeholder_date">placeholder date should appear here</div>
+                <div id="placeholder_location">placeholder location should appear here</div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- end of modal, placeholder detail -->
+
+    <!-- begin modal, AuxData settings -->
+    <div id="vnAuxDataListScreen" class="modal">
+      <div class="modal-dialog modal-fullscreen-sm-down">
+        <div class="modal-content">
+
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h3>Auxiliary data</h3>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+            <ul class="nav nav-tabs nav-fill" id="auxDataTabGroup" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="aux-data-list-sites-tab"
+                  data-bs-toggle="tab" data-bs-target="#aux-data-list-sites-content"
+                  type="button" role="tab" aria-controls="aux-data-list-sites-content" aria-selected="true">
+                    Sites
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="aux-data-list-spp-items-tab"
+                  data-bs-toggle="tab" data-bs-target="#aux-data-list-spp-items-content"
+                  type="button" role="tab" aria-controls="aux-data-list-spp-items-content" aria-selected="false">
+                    Species items
+                </button>
+              </li>
+            </ul>
+            <div class="tab-content" id="auxDataTabGroupContent">
+              <div class="tab-pane fade show active" id="aux-data-list-sites-content"
+                role="tabpanel" aria-labelledby="aux-data-list-sites-tab">
+                <div id="none-yet-msg-aux-sites">
+                  (not collecting any Auxiliary Date for Sites yet)
+                </div>
+                <div class="d-grid gap-2">
+                  <button type="button" class="btn btn-primary  btn-xl"
+                    id="btn-add-aux-spec-for-site">
+                    Add new
+                  </button>
+                </div>
+                <div class="aux-specs-list">
+                  <!-- list will be filled on-the-fly -->
+                  <ul id="aux-specs-list-for-sites">
+                  </ul>
+                </div>
+              </div>
+              <div class="tab-pane fade" id="aux-data-list-spp-items-content"
+                role="tabpanel" aria-labelledby="aux-data-list-spp-items-tab">
+                <div id="none-yet-msg-aux-spp">
+                  (not collecting any Auxiliary Date for Species Items yet)
+                </div>
+                <div class="d-grid gap-2">
+                  <button type="button" class="btn btn-primary  btn-xl"
+                    id="btn-add-aux-spec-for-spp">
+                    Add new
+                  </button>
+                </div>
+                <div class="aux-specs-list">
+                  <!-- list will be filled on-the-fly -->
+                  <ul id="aux-specs-list-for-spp">
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div> <!-- end of modal body -->
+        </div>
+      </div>
+    </div>
+    <!-- end of modal, AuxData settings -->
+
+    <!-- begin modal, AuxData spec detail -->
+    <div id="vnAuxDataSpecInfoScreen" class="modal auxdata_spec_info_screen">
+      <div class="modal-dialog modal-fullscreen-sm-down">
+        <div class="modal-content">
+
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h3 id="aux-spec-hdr-msg">Auxilary Data item to collect</h3>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+            <div class="auxdata_info_div">
+              <form  id="auxdata_info_form" autocomplete="off">
+                <div class="form-group">
+                  <div class="input-group">
+                    <span class="input-group-text" id="auxspec-name">
+                      <h3>Name for this item</h3></span>
+                    <input type="text" class="form-control"
+                      id="inputAuxSpecName"
+                      aria-label="Input spec name"
+                      aria-describedby="auxspec-name">
+                  </div>
+                  <span><h3>If used:</h3></span>
+                  <div class="input-group">
+                    <span class="input-group-text" id="auxspec-default">
+                      <h3>Default value</h3></span>
+                    <input type="number" class="form-control"
+                      id="inputAuxSpecDefault"
+                      aria-label="Input spec default"
+                      aria-describedby="auxspec-default">
+                  </div>
+                  <div class="input-group">
+                    <span class="input-group-text"><h3>Minimum</h3></span>
+                    <input type="number" id="inputAuxSpecMin" aria-label="Minimum" class="form-control">
+                  </div>
+                  <div class="input-group">
+                    <span class="input-group-text"><h3>Maximum</h3></span>
+                    <input type="number" id="inputAuxSpecMax" aria-label="Maximum" class="form-control">
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox"
+                      id="ckAuxSpecRequired" name="opt_auxspec_reqd" value="">
+                    <label class="form-check-label"  for="ckAuxSpecRequired"
+                      id="ckAuxSpecRequiredLabel">
+                      Require this data item
+                    </label>
+                  </div>
+                </div>
+                <button type="button" class="btn btn-primary  btn-xl"
+                  name="btn-save-auxdata-spec" id="btn-save-auxdata-spec">
+                  Save Changes</button>
+                <button type="button" class="btn btn-primary  btn-xl"
+                  name="btn-delete-auxdata-spec" id="btn-delete-auxdata-spec">
+                  Delete this Specification</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- end of modal, AuxData spec detail -->
+
+    <!-- begin modal, AuxData entry -->
+    <div id="vnAuxDataEntryScreen" class="modal auxdata_entry_screen">
+      <div class="modal-dialog modal-fullscreen-sm-down">
+        <div class="modal-content">
+
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h3 id="aux-entry-hdr-msg">Auxilary Data to collect</h3>
+            <!-- no 'dismiss' button -->
+            <!-- <button type="button" class="btn-close" data-bs-dismiss="modal"></button> -->
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+            <div class="auxdata_entry_div">
+              <!-- following form sections will be generated on the fly -->
+              <div id="auxdata_entry_inputs">
+                <!--
+                <div class="input-group">
+                  <span class="input-group-text" id="auxspec-" + spec.id>
+                    <h3>Data name</h3></span>
+                  <input type="number" class="form-control"
+                    id="" + spec.id
+                    aria-label="" + spec.name
+                    aria-describedby=""auxspec-" + spec.id">
+                </div>
+                -->
+              </div>
+              <button type="button" class="btn btn-primary  btn-xl"
+                name="btn-save-auxdata" id="btn-save-auxdata">
+                Save</button>
+              <button type="button" class="btn btn-primary  btn-xl"
+                name="btn-cancel-auxdata" id="btn-cancel-auxdata">
+                Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- end of modal, AuxData entry -->
+
+    <!-- begin modal, allow locations -->
+    <div id="vnAllowLocationsScreen" class="modal">
+      <div class="modal-dialog modal-fullscreen-sm-down">
+        <div class="modal-content">
+
+          <!-- Modal Header -->
+          <div class="modal-header">
+            Allow locations
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <h3>The purpose of this app is to record locations of plants.
+              For this, you must "Allow" the app to know your device location. 
+              Otherwise, there is no point to using this app.
+              To continue, dismiss this message and click "Add ... " again.
+            </h3>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- end of modal, allow locations -->
+
+    <!-- begin modal, locations denied -->
+    <div id="vnLocationsDeniedScreen" class="modal">
+      <div class="modal-dialog modal-fullscreen-sm-down">
+        <div class="modal-content">
+
+          <!-- Modal Header -->
+          <div class="modal-header">
+            You have blocked locations
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <h3>You have blocked this app from knowing your device location, and 
+              therefore it can't function. 
+              You may be able to change this in the browser settings, or your brower might
+              ask again to "Allow". 
+              Until then, this app won't work.
+              To work in Safari, you need Safari version 16 or later (Released 2022-09-12)
+            </h3>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- end of modal, locations denied -->
+
+    <!-- begin modal, incompatible Safari -->
+    <div id="vnBadSafariScreen" class="modal">
+      <div class="modal-dialog modal-fullscreen-sm-down">
+        <div class="modal-content">
+
+          <!-- Modal Header -->
+          <div class="modal-header">
+            Incompatible browser
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <h3>This browser cannot get locations, and therefore this app can't function. 
+              To use Safari, you need Safari version 16 or later (Released 2022-09-12)
+            </h3>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- end of modal, incompatible Safari -->
+
+    <!-- begin modal, wait for accuracy -->
+    <div id="vnWaitForAccuracyScreen" class="modal wait_accuracy_screen" role="dialog">
+      <div class="modal-dialog modal-fullscreen-sm-down modal-dialog-scrollable">
+        <div class="modal-content">
+
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h3>Waiting for target accuracy</h3>
+            <!-- no 'dismiss' button here -->
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+            <form id="send-form" autocomplete="off">
+              <div class="form-floating mb-3 mt-3">
+                <div class="row"> <!-- first row -->
+                  <div class="col"> <!-- first column, location info -->
+                    <div id="waiting_location_accuracy_info">
+                      Latitude, Longitude, and Accuracy
+                    </div>
+                  </div> <!-- end of first column, location info -->
+                </div> <!-- end of first row, dropdown and site chosen -->
+
+                <div class="row"> <!-- 2nd row, 'Send' button -->
+                  <button type="button" class="btn btn-primary btn-xl"
+                      name="btn_accept_accuracy"
+                      id="btn_accept_accuracy">Accept accuracy
+                  </button>
+                </div> <!-- end of 2nd row, 'Accept accuracy' button -->
+              </div> <!-- end of form-floating -->
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- end modal, wait for accuracy -->
+
+    <!-- begin modal, send site data -->
+    <div id="vnSendDataScreen" class="modal send_data_screen" role="dialog">
+      <div class="modal-dialog modal-fullscreen-sm-down modal-dialog-scrollable">
+        <div class="modal-content">
+
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h3>Send data</h3>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+            <form id="send-form" autocomplete="off">
+              <div class="form-floating mb-3 mt-3">
+                <div class="row"> <!-- first row, dropdown and site chosen -->
+                  <div class="col"> <!-- first column, dropdown -->
+                    <div class="dropdown">
+                      <button class="btn btn-primary btn-xl dropdown-toggle"
+                          type="button" id="dropdownMenuSiteToSend"
+                          data-bs-toggle="dropdown" aria-expanded="false">
+                          Site, which data to send
+                      </button>
+                      <ul id = "sendFormSitesList" class="dropdown-menu"
+                          aria-labelledby="dropdownMenuSiteToSend">
+                        <li class="dropdown-item" id = "siteToSend_0"><h3>No sites yet 1</h3></li>
+                        <li class="dropdown-item" id = "siteToSend_1"><h3>No sites yet 2</h3></li>
+                        <li class="dropdown-item" id = "siteToSend_2"><h3>No sites yet 3</h3></li>
+                      </ul>
+                    </div>
+                  </div> <!-- end of first column, dropdown -->
+                  <div class="col"> <!-- 2nd column, site chosen -->
+                    <div id = "siteChosenToSend" class="form-text">
+                      <h3>-</h3>
+                    </div>
+                  </div> <!-- end of 2nd column, site chosen -->
+                </div> <!-- end of first row, dropdown and site chosen -->
+                <div class="row"> <!-- 2nd row, email and labels -->
+                  <input type="email" class="form-control form-control-lg"
+                      id="email_address_box" name="email_address-box"
+                      placeholder="Email" aria-describedby="emailHelp" required>
+                  <label for="email_address-box">Email address</label>
+                  <div id="emailHelp" class="form-text">
+                    <h3>Send your data by email.</h3>
+                  </div>
+                </div> <!-- end of 2nd row, email and labels -->
+                <div class="row"> <!-- 3rd row, 'Send' button -->
+                  <button type="button" class="btn btn-primary btn-xl"
+                      name="btn-send-data"
+                      id="btn-send-data">Send
+                  </button>
+                </div> <!-- end of 3rd row, 'Send' button -->
+                <div class="row"> <!-- 4th row, format message -->
+                  <div>Format chosen to send:</div>
+                  <div id="msgSentDataFormat"></div>
+                  <div>Change in Settings</div>
+                </div> <!-- end of 4th row, format message -->
+
+              </div> <!-- end of form-floating -->
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- end of modal, send site data-->
+
+    <!-- begin modal, send remembered species -->
+    <div id="vnSendRememberedSppScreen" class="modal send_remem_spp_screen" role="dialog">
+      <div class="modal-dialog modal-fullscreen-sm-down modal-dialog-scrollable">
+        <div class="modal-content">
+
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h3>Send remembered species</h3>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+            <form id="send-form" autocomplete="off">
+              <div class="form-floating mb-3 mt-3">
+                <div class="row"> <!-- 1st row, email and labels -->
+                  <input type="email" class="form-control form-control-lg"
+                      id="email_spp_address_box" name="email_spp_address-box"
+                      placeholder="Email" aria-describedby="emailHelp" required>
+                  <label for="email_spp_address-box">Email address</label>
+                  <div id="emailSppHelp" class="form-text">
+                    <h3>Send the list of remembered species by email.</h3>
+                  </div>
+                </div> <!-- end of 1st row, email and labels -->
+                <div class="row"> <!-- 2nd row, 'Send' button -->
+                  <button type="button" class="btn btn-primary btn-xl"
+                      name="btn-send-remembered-spp"
+                      id="btn-send-remembered-spp">Send
+                  </button>
+                </div> <!-- end of 2nd row, 'Send' button -->
+                <div class="row"> <!-- 3rd row, format message -->
+                  <div>Format chosen to send:</div>
+                  <div id="msgSentRememberedSppFormat"></div>
+                  <div>Change in Settings</div>
+                </div> <!-- end of 3rd row, format messag -->
+
+              </div> <!-- end of form-floating -->
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- end of modal, send remembered species-->
+
+
+    <!-- begin modal, Settings -->
+    <div id="vnSettingsScreen" class="modal">
+      <div class="modal-dialog modal-fullscreen-sm-down">
+        <div class="modal-content">
+
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h3>Settings</h3>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+            <form id="settings-form" autocomplete="off">
+              <div class="form-floating mb-3 mt-3">
+                <div class="row gx-5  gy-5"> <!-- first row, dropdown and region chosen -->
+                  <div class="col">
+                    <div class="p-3 border bg-light"> <!-- visually set off contents -->
+                      <div class="row"> <!-- begin nested grid -->
+                        <div class="col"> <!-- first column, dropdown -->
+                          <div class="dropdown">
+                            <button class="btn btn-primary btn-xl dropdown-toggle"
+                                type="button" id="dropdownMenuChooseRegion"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                Region
+                            </button>
+                            <ul id = "settingsFormRegionsList" class="dropdown-menu"
+                                aria-labelledby="dropdownMenuChooseRegion">
+                              <li class="dropdown-item" id = "region_OR"><h3>Oregon</h3></li>
+                              <li class="dropdown-item" id = "region_WA"><h3>Washington</h3></li>
+                              <li class="dropdown-item" id = "region_CA"><h3>California</h3></li>
+                            </ul>
+                          </div> <!-- end dropdown -->
+                        </div> <!-- end first nested column containing dropdown -->
+                        <div class="col"> <!-- 2nd column, region chosen -->
+                          <div id = "regionChosen" class="form-text">
+                            <h3>Oregon</h3>
+                          </div>
+                        </div> <!-- end of 2nd column, region chosen -->
+                      </div> <!-- end row, end nested grid -->
+                    </div> <!-- end visually set off contents -->
+                  </div> <!-- end of first column, dropdown and region chosen -->
+                </div> <!-- end of first row, dropdown and region chosen -->
+                <div class="row gx-5  gy-5"> <!-- second row, radio buttons spp or subsppvar -->
+                  <div class="col">
+                    <div class="p-3 border bg-light"> <!-- visually set off radio buttons -->
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio"
+                          name="sppInclusionGroup" id="simpleSppOnly">
+                        <label class="form-check-label" for="simpleSppOnly">
+                          Show only simple species
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio"
+                          name="sppInclusionGroup" id="allSubsppVars">
+                        <label class="form-check-label" for="allSubsppVars">
+                          Show all subspecies and varieties
+                        </label>
+                      </div>
+                    </div>  <!-- end of wrap radio buttons -->
+                  </div> <!-- end of column -->
+                </div> <!-- end of second row, radio buttons spp or subsppvar -->
+                <div class="row gx-5  gy-5"> <!-- 3rd row, site accuracy -->
+                  <div class="col">
+                    <div class="p-3 border bg-light"> <!-- visual border -->
+                      <div class="row">
+                        <div class="col">
+                          Acquire site locations until accuracy is
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <div class="col-4">
+                          <input type="number"  min="2" max="1000" step="1"
+                            class="form-control"
+                            id="inputSiteTargetAccuracy">
+                        </div>
+                        <div class="col">meters or better</div>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox"
+                          id="ckWaitSiteAcc" name="opt_site_acc" value="">
+                        <label class="form-check-label"  for="ckWaitSiteAcc">
+                          Wait for this target accuracy
+                        </label>
+                      </div>
+                    </div> <!--end wrap contents -->
+                  </div> <!-- end col -->
+                </div> <!-- end 3rd row -->
+
+                <div class="row gx-5  gy-5"> <!-- 4th row, species accuracy -->
+                  <div class="col">
+                    <div class="p-3 border bg-light"> <!-- visual border -->
+                      <div class="row">
+                        <div class="col">
+                          Acquire species locations until accuracy is
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <div class="col-4">
+                          <input type="number"  min="2" max="1000" step="1"
+                            class="form-control"
+                            id="inputSppTargetAccuracy">
+                        </div>
+                        <div class="col">meters or better</div>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox"
+                          id="ckWaitSppAcc" name="opt_spp_acc" value="">
+                        <label class="form-check-label"  for="ckWaitSppAcc">
+                          Wait for this target accuracy
+                        </label>
+                      </div>
+                    </div> <!--end visual block -->
+                  </div> <!-- end col -->
+                </div> <!-- end 4th row -->
+
+                <div class="row gx-5  gy-5"> <!-- 5th row, radio buttons data format -->
+                  <div class="col">
+                    <div class="p-3 border bg-light"> <!-- visually set off this section -->
+                      <div class="row">
+                        <div class="col">
+                          Send data as:
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col">
+                          <div class="form-check">
+                            <input class="form-check-input" type="radio"
+                              name="sentDataFormat" id="sendDataHumanReadable"
+                              value="fmtHumanReadable">
+                            <label class="form-check-label"
+                              for="sendDataHumanReadable">
+                              Human readable text
+                            </label>
+                          </div>
+                          <div class="form-check">
+                            <input class="form-check-input" type="radio"
+                              name="sentDataFormat" id="sendDataAsCSV"
+                              value="fmtCsv">
+                            <label class="form-check-label" for="sendDataAsCSV">
+                              CSV (spreadsheet)
+                            </label>
+                          </div>
+<!-- hide these options for now
+                          <div class="form-check">
+                            <input class="form-check-input" type="radio"
+                              name="sentDataFormat" id="sendDataAsXML"
+                              value="fmtXml">
+                            <label class="form-check-label" for="sendDataAsXML">
+                              XML (not enabled yet)
+                            </label>
+                          </div>
+                          <div class="form-check">
+                            <input class="form-check-input" type="radio"
+                              name="sentDataFormat" id="sendDataAsJSON"
+                              value="fmtJson">
+                            <label class="form-check-label" for="sendDataAsXML">
+                              JSON (not enabled yet)
+                            </label>
+                          </div>
+-->
+                        </div> <!-- end the single columm that holds the radio buttons -->
+                      </div>  <!-- end the single columm that holds the radio buttons -->
+                    </div>  <!-- end the visual data-format block -->
+                  </div> <!-- end of column -->
+                </div> <!-- end of 5th row, data format block holding radio buttons -->
+              </div>
+            </form> <!-- end of form-floating -->
+          </div> <!-- end of modal body -->
+        </div>
+      </div>
+    </div>
+    <!-- end of modal, Settings -->
+
+    <!-- begin modal, Corrections, Reset -->
+    <div id="vnResetAppScreen" class="modal">
+      <div class="modal-dialog modal-fullscreen-sm-down">
+        <div class="modal-content">
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h3>Reset this app and clear all data</h3>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <!-- Modal body -->
+          <div class="modal-body">
+            <form id="reset-app-form" autocomplete="off">
+              <div class="form-floating mb-3 mt-3">
+                <div class="row"> <!-- first row, 'Reset' button -->
+                  <button type="button" class="btn btn-primary btn-xl"
+                      name="btn-reset-app"
+                      id="btn-reset-app">Reset this app
+                  </button>
+                </div> <!-- end of first row, 'Reset' button -->
+              </div> <!-- end of form contents -->
+            </form> <!-- end of form-floating -->
+          </div> <!-- end of modal body -->
+        </div> <!-- end of modal content -->
+      </div> <!-- end of modal dialog -->
+    </div> <!-- end of screen -->
+    <!-- end of modal, Corrections, Reset -->
+
+    <!-- begin modal, delete old sites -->
+    <div id="vnDeleteSitesScreen" class="modal old_sites_screen">
+      <div class="modal-dialog modal-fullscreen-sm-down modal-dialog-scrollable">
+        <div class="modal-content">
+
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h3>Delete old sites</h3>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+            <div class="old_sites_list">
+              <!-- list will be filled on-the-fly -->
+              <ul id="old_sites_list" class="list-unstyled">
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- end of modal, delete old sites -->
+
+    <!-- begin modal, forget found species -->
+    <div id="vnForgetSppScreen" class="modal forget_spp_screen">
+      <div class="modal-dialog modal-fullscreen-sm-down modal-dialog-scrollable">
+        <div class="modal-content">
+
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h3>Forget found species. Tap an item to remove it from the app's priority list</h3>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+            <div class="forget_spp_list">
+              <!-- list will be filled on-the-fly -->
+              <ul id="forget_spp_list" class="list-unstyled">
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- end of modal, forget found species -->
+
+    <!-- begin modal, Help, About -->
+    <div id="vnHelpAboutScreen" class="modal">
+      <div class="modal-dialog modal-fullscreen-sm-down">
+        <div class="modal-content">
+
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h3>About VegNab
+            </h3>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <!-- Modal body -->
+          <div class="modal-body">
+            <div id="about_text">
+              <p>
+                VegNab is a web app for collecting vegetation data. It's like a notebook, that 
+                helps you out in various ways: It lets you quickly enter correct spellings, 
+                by searching on scientific name or common name. It automatically gets a 
+                timestamp and GPS location for each item. It puts species from your local 
+                region (e.g., state or province) at the top of the search order.
+              </p>
+              <p>
+                VegNab does not track you in any way. Everything is in your browser, on your 
+                private mobile device. There is no login, and no cloud storage. You get your 
+                data sets by emailing them to yourself.
+              </p>
+              <p>
+                Data are organized by "sites". A site is just a name, under which you enter 
+                plant species. By default, VegNab makes only a species list for each site. 
+                However, you can set up VegNab to ask you for "auxiliary data" for each site, 
+                and/or each species item.
+              </p>
+              <p>
+                VegNab does not identify plants, but it allows you to defer identification by 
+                using your own "placeholder" names. You start a placeholder by typing a code, 
+                up to ten characters, that has at least one space in it. You can attach a 
+                gallery of photos to a placeholder, for later visual identification or 
+                reference. VegNab puts your auxiliary data onto your placeholders, the same as 
+                on known species. In this way, you could do an entire vegetation survey 
+                without knowing what any of the plants are -- as long as you can tell them apart.
+              </p>
+              <p>
+                After initial load, VegNab works entirely offline. VegNab remembers all your 
+                work, within certain limitation. Since all data are stored in 
+                the browser, they are under the browser's storage policy, which may "evict" data 
+                sets that become too large. This is only likely if you 
+                record many sites, without ever clearing off old ones.
+              </p>
+              <p>
+                Best usage is to email your data to yourself, and then clear off old
+                sites you have finished.
+              </p>
+            </div>
+          </div> <!-- end of modal body -->
+        </div>
+      </div>
+    </div>
+    <!-- end of modal, Help, About -->
+
+    <!-- begin modal, Help, Version -->
+    <div id="vnHelpVersionScreen" class="modal">
+      <div class="modal-dialog modal-fullscreen-sm-down">
+        <div class="modal-content">
+
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h3>Version
+            </h3>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <!-- Modal body -->
+          <div class="modal-body">
+            <div id="serviceworker-version">
+
+            </div>
+          </div> <!-- end of modal body -->
+        </div>
+      </div>
+    </div>
+    <!-- end of modal, Help, Verion -->
+
+    <!-- begin modal, under construction -->
+    <div id="vnUnderConstructionScreen" class="modal">
+      <div class="modal-dialog modal-fullscreen-sm-down">
+        <div class="modal-content">
+
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h1>This option isn't working yet</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- end of modal, under construction -->
+
+  </div>
+  <div id="footer_bar">
+    <footer class="footer mt-auto py-3 bg-dark">
+      <div class="container">
+        <!-- footer info will be filled in on the fly -->
+        <span id="info_footer" class="text-light">
+          Loading species, please wait
+        </span>
+      </div>
+    </footer>
+  </div>
+  <script src="bootstrap.bundle.min.js"  defer>
+  </script>
+
+  <!-- for determining which state/province of US/Canada, and therefore which species are local
+  <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+   -->
+  </body>
+</html>
