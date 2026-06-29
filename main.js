@@ -1,8 +1,13 @@
 "use strict";
 
-
-//const repo_name = 'vegnab-webapp' // use for public version
-const repo_name = 'dev-vegnab' // use for development version
+// the following is needed for the serviceworker registration and scope
+// it will become 'vegnab-webapp' for the public version
+// or 'dev-vegnab' for the development version
+const repo_name = window.location.pathname.split('/')[1];
+// if ever moved to a custom domain where the app is at the
+//  root (no subfolder in the path), [1] would be an empty string
+// may work correctly on localhost,
+//  though the value would be whatever local path served from
 var swVersion = "";
 // install Service Worker here, then it will "live" in the browser
 if ('serviceWorker' in navigator) {
