@@ -57,29 +57,29 @@
 
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" 
-              id="navbarCorrectionsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              id="navbarINatDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              iNaturalist
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarINatDropdown">
+              <li><a class="dropdown-item" href="#vnUnderConstructionScreen" data-bs-toggle="modal">
+                <h3>Placeholders -> Observations</h3></a></a></li>
+              <li><a class="dropdown-item" href="#vnINatAboutScreen" data-bs-toggle="modal">
+                <h3>About</h3></a></li>
+            </ul>
+          </li>
+
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" 
+              id="navbarSendDataDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               Email data
             </a>
-            <ul class="dropdown-menu" aria-labelledby="navbarCorrectionsDropdown">
+            <ul class="dropdown-menu" aria-labelledby="navbarSendDataDropdown">
               <li><a class="dropdown-item" href="#vnSendDataScreen" data-bs-toggle="modal">
                 <h3>Email site data</h3></a></a></li>
               <li><a class="dropdown-item" href="#vnSendRememberedSppScreen" data-bs-toggle="modal">
                 <h3>Email remembered species</h3></a></a></li>
               <li><a class="dropdown-item" href="#vnUnderConstructionScreen" data-bs-toggle="modal">
                 <h3>Email placeholders list</h3></a></li>
-            </ul>
-          </li>
-
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" 
-              id="navbarCorrectionsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              iNaturalist
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="navbarCorrectionsDropdown">
-              <li><a class="dropdown-item" href="#vnUnderConstructionScreen" data-bs-toggle="modal">
-                <h3>Placeholders -> Observations</h3></a></a></li>
-              <li><a class="dropdown-item" href="#vnUnderConstructionScreen" data-bs-toggle="modal">
-                <h3>About</h3></a></li>
             </ul>
           </li>
 
@@ -625,6 +625,66 @@
       </div>
     </div>
     <!-- end modal, wait for accuracy -->
+
+
+    <!-- begin modal, iNat, About -->
+    <div id="vnINatAboutScreen" class="modal">
+      <div class="modal-dialog modal-fullscreen-sm-down">
+        <div class="modal-content">
+
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h3>About iNaturalist sync
+            </h3>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <!-- Modal body -->
+          <div class="modal-body">
+            <div id="about_inat_text">
+              <p>
+                This will not synchronize all VegNab data to iNaturalist ("iNat"). People 
+                don't use iNat that way; observations without photos, and potential duplicates 
+                from close together. But iNat "observations" closely correspond to VegNab 
+                "placeholders": Species you may not know in the field, documented by photos.
+              </p>
+              <p>
+                The "Placeholders -> Observations" ("sync"). operation, after prompting you 
+                for your iNat login, will create an observation in your iNat account for 
+                each VegNab placeholder. When you email site data from VegNab, the links to 
+                any relevant observations will be in the spreadsheet. You can send them to 
+                your colleagues for documentation or help, but they will also be up 
+                for other iNat users to ID.
+              </p>
+              <p>
+                VegNab will keep track of the observations in iNat, even when an original 
+                placeholder code is overwritten when someone identifies the species. VegNab 
+                will include the links on future sites where you use the same placeholders.
+              </p>
+              <p>
+                VegNab works completely offline for original data input. However, you must 
+                have good connectivity for the iNat sync to work, because it needs to upload 
+                photos. Do the iNat sync before emailing your site data, so the 
+                iNat observation links can be included.
+              </p>
+              <p>
+                If you edit an observation on iNat, such as adding more photos from 
+                microscopy, the changes will not propagate back to VegNab. But VegNab tracks 
+                it as the "same" observation. Running VegNab sync again will not create 
+                duplicates, but if you independently create iNat observations, there is no 
+                way for VegNab to know these could be duplicates.
+              </p>
+              <p>
+                If you reset VegNab, such as by update to a new version, it will forget the 
+                iNat observations; but these will still remain on iNat.
+              </p>
+            </div>
+          </div> <!-- end of modal body -->
+        </div>
+      </div>
+    </div>
+    <!-- end of modal, iNat, About -->
+
+
 
     <!-- begin modal, send site data -->
     <div id="vnSendDataScreen" class="modal send_data_screen" role="dialog">
