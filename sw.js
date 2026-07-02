@@ -1,6 +1,6 @@
 
-const APP_PREFIX = 'VegNab' 
-const APP_VERSION = 'v0.34'
+const APP_PREFIX = 'Dev-VN' // remember to change this to 'VegNab' if this filed copied to public version repo
+const APP_VERSION = 'v0.35'
 const CACHE_NAME = APP_PREFIX + "_" + APP_VERSION
 
 console.log('[SW] Loaded. Version:', APP_VERSION);
