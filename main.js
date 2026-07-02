@@ -1,5 +1,6 @@
 "use strict";
-
+  let iNatConfig = null; // declared here, accessible everywhere inside the IIFE
+  
 // the following is needed for the serviceworker registration and scope
 // it will become 'vegnab-webapp' for the public version
 // or 'dev-vegnab' for the development version
@@ -343,8 +344,24 @@ document.addEventListener('visibilitychange', function() {
   // assure the arrays are retrieved before refreshing the UI
   document.addEventListener("DOMContentLoaded", async function() {
     console.log('DOMContentLoaded');
+    // make sure we have iNat configuration
+    const response = await fetch('./inat-config.json');
+    iNatConfig = await response.json(); // assigned here
+
+    if (iNatConfig.is_dev) {
+       // what is being removed is the default *hiding*, so it shows the banner
+      document.getElementById('dev-banner').classList.remove('d-none');
+    }
+
     // wait till app state fully retrieved
     await waitForAppState();
+
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('code');
+    if (code) {
+      window.history.replaceState({}, '', window.location.pathname);
+      await exchangeCodeForToken(code, iNatConfig);
+    }
 
     try {
       const value = await makeLocalAndNonlocalSppArrays();
@@ -355,7 +372,6 @@ document.addEventListener('visibilitychange', function() {
     showMainScreen();
  });
  
-
  function waitForAppState() {
   return new Promise(function(resolve) {
     function check() {
@@ -376,26 +392,17 @@ document.addEventListener('visibilitychange', function() {
   });
  }
 
+  async function exchangeCodeForToken(code, iNatConfig) {
+    console.log('exchangeCodeForToken called');
+    console.log('code:', code);
+    console.log('iNatConfig:', iNatConfig);
+    // TODO: implement PKCE token exchange
+  }
 
-//  function ckIfAppStateRetrieved() {
-//   console.log(timeCtRetrieve + "ms, sitesRetrieved=" + sitesRetrieved + " sppRetrieved=" + sppRetrieved 
-//     + " phsRetrieved=" + phsRetrieved + " foundSppRetrieved=" + foundSppRetrieved
-//     + " auxSpecsRetrieved=" + auxSpecsRetrieved + " auxDataRetrieved=" + auxDataRetrieved
-//     + " appSettingsRetrieved=" + appSettingsRetrieved );
-//   let allStatesRetrieved = (sitesRetrieved && sppRetrieved && phsRetrieved && foundSppRetrieved 
-//       && auxSpecsRetrieved && auxDataRetrieved && appSettingsRetrieved);
-//   if(allStatesRetrieved) {
-//     makeLocalAndNonlocalSppArrays().then(
-//       function(value) {showAppStatus(value);},
-//       function(error) {showListsError(error);}
-//     );
-//     showMainScreen();
-//   } else {
-//     timeCtRetrieve += 100;
-//     window.setTimeout(ckIfAppStateRetrieved, 100); // checks every 100 milliseconds
-//   }
-// }
-  
+  function startInatSync() {
+    // iNatConfig accessible here too
+    console.log(iNatConfig.client_id);
+  }
 
 // for testing, region is "OR" (Oregon)
 // user can change it 'Options' screen

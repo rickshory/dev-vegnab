@@ -40,6 +40,7 @@ const appShellFiles = [
   'index.html',
   'nrcs_spp.js',
   'main.js',
+  'inat-config.json', 
   'regions.js',
   'bootstrap.bundle.min.js',
   'bootstrap.bundle.min.js.map',
