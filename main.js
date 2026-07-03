@@ -12,15 +12,35 @@ const repo_name = window.location.pathname.split('/')[1];
 var swVersion = "";
 // install Service Worker here, then it will "live" in the browser
 if ('serviceWorker' in navigator) {
-  // Register a service worker hosted at the root of the
-  // site using the default scope.
   //
-  //  Use following format to run on LocalHost
+  //  Use following format to run on LocalHost, register a service worker hosted at
+  //   the root of the site using the default scope.
 //   navigator.serviceWorker.register('sw.js').then((registration) => {
-  //  Use following format to run from GitHub
+  //  Use following format to run from GitHub, correct scopes for dev and stable versions
     navigator.serviceWorker.register('/' + repo_name + '/sw.js'
       , {scope: '/' + repo_name + '/'}).then((registration) => {
     console.log('Service worker registration succeeded:', registration);
+
+    //     // TODO alert users new version available
+    // registration.addEventListener('updatefound', () => {
+    //   const newWorker = registration.installing;
+    //   newWorker.addEventListener('statechange', () => {
+    //     if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+    //       // A new version is available — show notice to user
+    //       showUpdateBanner();
+    //     }
+    //   });
+    // });
+    // // The inner statechange check is important — updatefound fires when a new SW 
+    // // starts downloading, but you want to wait until it's fully installed before 
+    // // telling the user. The navigator.serviceWorker.controller check ensures you're 
+    // // not showing the banner on a brand new install (where there's no previous 
+    // // version to update from). The service worker itself has a separate install 
+    // // event, but that's for setting up the cache — it doesn't communicate back to 
+    // // the page. The page-side registration object is where you listen for 
+    // // lifecycle events like updatefound.
+
+
     if (!navigator.serviceWorker.controller) {
       console.log('[main] No controller yet — reloading to allow control...');
       window.location.reload();
@@ -49,13 +69,14 @@ var appSettingsRetrieved = false;
 
 
 // set up persistent storage
+const dbName = repo_name + '-VnDatabase';
 let db;
-const dbRequest = indexedDB.open("VnDatabase", 1);
+const dbRequest = indexedDB.open(dbName, 1);
 dbRequest.onerror = (e) => {
   console.error("VegNab web app not confirmed to used indexedDB");
 };
 dbRequest.onsuccess = (e) => {
-  console.log("indexedDB open succeeded for 'VnDatabase'");
+  console.log("indexedDB open succeeded for '" + dbName + "'");
   // object store should have been initialized in onupgradeneeded event
   db = e.target.result;
   db.onerror = (e) => {

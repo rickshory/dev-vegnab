@@ -1,5 +1,5 @@
 
-const APP_PREFIX = 'Dev-VN' // remember to change this to 'VegNab' if this filed copied to public version repo
+const APP_PREFIX = 'Dev-VN' // remember to change this to 'VegNab' if this file is copied to public version repo
 const APP_VERSION = 'v0.35'
 const CACHE_NAME = APP_PREFIX + "_" + APP_VERSION
 
@@ -192,3 +192,4 @@ self.addEventListener('activate', (e) => {
     }))
   })); 
 });
+
