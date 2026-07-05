@@ -402,9 +402,9 @@ document.addEventListener('visibilitychange', function() {
         + " phsRetrieved=" + phsRetrieved + " foundSppRetrieved=" + foundSppRetrieved
         + " auxSpecsRetrieved=" + auxSpecsRetrieved + " auxDataRetrieved=" + auxDataRetrieved
         + " appSettingsRetrieved=" + appSettingsRetrieved );
-      let allStatesRetrieved = (sitesRetrieved && sppRetrieved && phsRetrieved && foundSppRetrieved 
+      let allArraysRetrieved = (sitesRetrieved && sppRetrieved && phsRetrieved && foundSppRetrieved 
         && auxSpecsRetrieved && auxDataRetrieved && appSettingsRetrieved);
-      if (allStatesRetrieved) {
+      if (allArraysRetrieved) {
         resolve(); // done; continue from the 'await' point in the listener
       } else {
         timeCtRetrieve += 100;
