@@ -1,5 +1,5 @@
 "use strict";
-  let iNatConfig = null; // declared here, accessible everywhere inside the IIFE
+let iNatConfig = null; // declared here, accessible everywhere inside the IIFE
   
 // the following is needed for the serviceworker registration and scope
 // it will become 'vegnab-webapp' for the public version
@@ -73,7 +73,7 @@ const dbName = repo_name + '-VnDatabase';
 let db;
 const dbRequest = indexedDB.open(dbName, 1);
 dbRequest.onerror = (e) => {
-  console.error("VegNab web app not confirmed to used indexedDB");
+  console.error("VegNab web app not confirmed to use indexedDB");
 };
 dbRequest.onsuccess = (e) => {
   console.log("indexedDB open succeeded for '" + dbName + "'");
@@ -83,8 +83,8 @@ dbRequest.onsuccess = (e) => {
     // generic error handler for the database
     console.error(`Database error: ${e.target.errorCode}`)
   };
-  const transaction = db.transaction(["VNAppStates"]);
-  const objectStore = transaction.objectStore("VNAppStates");
+  const transaction = db.transaction(["VNObjStore"]);
+  const objectStore = transaction.objectStore("VNObjStore");
 
   const sitesRequest = objectStore.get("vnSitesBkup");
   sitesRequest.onerror = (event) => {
@@ -162,14 +162,14 @@ dbRequest.onupgradeneeded = (e) => {
   // save the IDBDatabase interface
   const db = e.target.result;
   // create the db object store
-  const VnObjStore = db.createObjectStore("VNAppStates");
+  const VnObjStore = db.createObjectStore("VNObjStore");
   // stored objects will be arrays, and keys will be explicit
   console.log("created 'VnObjStore'");
   // the 'vn...Bkup' strings are the keys
   VnObjStore.put([], "vnSitesBkup"); // initialize to empty array
-  console.log(" VnObjStore[VNAppStates], 'vnSitesBkup' initialized as empty array");
+  console.log(" VnObjStore[VNObjStore], 'vnSitesBkup' initialized as empty array");
   VnObjStore.put([], "vnSpeciesBkup");
-  console.log(" VnObjStore[VNAppStates], 'vnSpeciesBkup' initialized as empty array");
+  console.log(" VnObjStore[VNObjStore], 'vnSpeciesBkup' initialized as empty array");
   VnObjStore.put([], "vnPlaceholdersBkup");
   VnObjStore.put([], "vnFoundSppBkup");
   VnObjStore.put([], "vnAuxSpecsBkup");
@@ -180,93 +180,93 @@ dbRequest.onupgradeneeded = (e) => {
 };
 
 function bkupSiteList() {
-  let sitesBkupRequest = db.transaction(["VNAppStates"], "readwrite")
-    .objectStore("VNAppStates")
+  let sitesBkupRequest = db.transaction(["VNObjStore"], "readwrite")
+    .objectStore("VNObjStore")
     .put(site_info_array, "vnSitesBkup"); // 'put' overwrites any previous
 
   sitesBkupRequest.onsuccess = (e) => {
-    console.log(" in object store 'VNAppStates', 'site_info_array' backed up under key 'vnSitesBkup' " + e);
+    console.log(" in object store 'VNObjStore', 'site_info_array' backed up under key 'vnSitesBkup' " + e);
   };
   sitesBkupRequest.onerror = (e) => {
-    console.log(" in object store 'VNAppStates', 'site_info_array' failed to back up under key 'vnSitesBkup' " + e);
+    console.log(" in object store 'VNObjStore', 'site_info_array' failed to back up under key 'vnSitesBkup' " + e);
   };
 };
 
 function bkupSpeciesList() {
-  let sppBkupRequest = db.transaction(["VNAppStates"], "readwrite")
-    .objectStore("VNAppStates")
+  let sppBkupRequest = db.transaction(["VNObjStore"], "readwrite")
+    .objectStore("VNObjStore")
     .put(site_spp_array, "vnSpeciesBkup"); // 'put' overwrites any previous
 
   sppBkupRequest.onsuccess = (e) => {
-      console.log(" in object store 'VNAppStates', 'site_spp_array' backed up under key 'vnSpeciesBkup' " + e);
+      console.log(" in object store 'VNObjStore', 'site_spp_array' backed up under key 'vnSpeciesBkup' " + e);
     };
   sppBkupRequest.onerror = (e) => {
-    console.log(" in object store 'VNAppStates', 'site_spp_array' failed to back up under key 'vnSpeciesBkup' " + e);
+    console.log(" in object store 'VNObjStore', 'site_spp_array' failed to back up under key 'vnSpeciesBkup' " + e);
   };
 };
 
 function bkupPlaceholders() {
-  let phBkupRequest = db.transaction(["VNAppStates"], "readwrite")
-    .objectStore("VNAppStates")
+  let phBkupRequest = db.transaction(["VNObjStore"], "readwrite")
+    .objectStore("VNObjStore")
     .put(placeholders_array, "vnPlaceholdersBkup"); // 'put' overwrites any previous
 
   phBkupRequest.onsuccess = (e) => {
-      console.log(" in object store 'VNAppStates', 'placeholders_array' backed up under key 'vnPlaceholdersBkup' " + e);
+      console.log(" in object store 'VNObjStore', 'placeholders_array' backed up under key 'vnPlaceholdersBkup' " + e);
     };
   phBkupRequest.onerror = (e) => {
-    console.log(" in object store 'VNAppStates', 'placeholders_array' failed to back up under key 'vnPlaceholdersBkup' " + e);
+    console.log(" in object store 'VNObjStore', 'placeholders_array' failed to back up under key 'vnPlaceholdersBkup' " + e);
   };
 };
 
 function bkupFoundSpp() {
-  let fndSppRequest = db.transaction(["VNAppStates"], "readwrite")
-    .objectStore("VNAppStates")
+  let fndSppRequest = db.transaction(["VNObjStore"], "readwrite")
+    .objectStore("VNObjStore")
     .put(found_spp_array, "vnFoundSppBkup"); // 'put' overwrites any previous
 
   fndSppRequest.onsuccess = (e) => {
-    console.log(" in object store 'VNAppStates', 'found_spp_array' backed up under key 'vnFoundSppBkup' " + e);
+    console.log(" in object store 'VNObjStore', 'found_spp_array' backed up under key 'vnFoundSppBkup' " + e);
   };
   fndSppRequest.onerror = (e) => {
-    console.log(" in object store 'VNAppStates', 'found_spp_array' failed to back up under key 'vnFoundSppBkup' " + e);
+    console.log(" in object store 'VNObjStore', 'found_spp_array' failed to back up under key 'vnFoundSppBkup' " + e);
   };
 };
 
 function bkupAuxSpecs() {
-  let auxSpecsRequest = db.transaction(["VNAppStates"], "readwrite")
-    .objectStore("VNAppStates")
+  let auxSpecsRequest = db.transaction(["VNObjStore"], "readwrite")
+    .objectStore("VNObjStore")
     .put(aux_specs_array, "vnAuxSpecsBkup"); // 'put' overwrites any previous
 
   auxSpecsRequest.onsuccess = (e) => {
-    console.log(" in object store 'VNAppStates', 'aux_specs_array' backed up under key 'vnAuxSpecsBkup' " + e);
+    console.log(" in object store 'VNObjStore', 'aux_specs_array' backed up under key 'vnAuxSpecsBkup' " + e);
   };
   auxSpecsRequest.onerror = (e) => {
-    console.log(" in object store 'VNAppStates', 'aux_specs_array' failed to back up under key 'vnAuxSpecsBkup' " + e);
+    console.log(" in object store 'VNObjStore', 'aux_specs_array' failed to back up under key 'vnAuxSpecsBkup' " + e);
   };
 };
 
 function bkupAuxData() {
-  let auxDataRequest = db.transaction(["VNAppStates"], "readwrite")
-    .objectStore("VNAppStates")
+  let auxDataRequest = db.transaction(["VNObjStore"], "readwrite")
+    .objectStore("VNObjStore")
     .put(aux_data_array, "vnAuxDataBkup"); // 'put' overwrites any previous
 
   auxDataRequest.onsuccess = (e) => {
-    console.log(" in object store 'VNAppStates', 'aux_data_array' backed up under key 'vnAuxDataBkup' " + e);
+    console.log(" in object store 'VNObjStore', 'aux_data_array' backed up under key 'vnAuxDataBkup' " + e);
   };
   auxDataRequest.onerror = (e) => {
-    console.log(" in object store 'VNAppStates', 'aux_data_array' failed to back up under key 'vnAuxDataBkup' " + e);
+    console.log(" in object store 'VNObjStore', 'aux_data_array' failed to back up under key 'vnAuxDataBkup' " + e);
   };
 };
 
 function bkupAppSettings() {
-  let appSettingsRequest = db.transaction(["VNAppStates"], "readwrite")
-    .objectStore("VNAppStates")
+  let appSettingsRequest = db.transaction(["VNObjStore"], "readwrite")
+    .objectStore("VNObjStore")
     .put(app_settings_array, "vnAppSettingsBkup"); // 'put' overwrites any previous
 
   appSettingsRequest.onsuccess = (e) => {
-    console.log(" in object store 'VNAppStates', 'app_settings_array' backed up under key 'vnAppSettingsBkup' " + e);
+    console.log(" in object store 'VNObjStore', 'app_settings_array' backed up under key 'vnAppSettingsBkup' " + e);
   };
   appSettingsRequest.onerror = (e) => {
-    console.log(" in object store 'VNAppStates', 'app_settings_array' failed to back up under key 'vnAppSettingsBkup' " + e);
+    console.log(" in object store 'VNObjStore', 'app_settings_array' failed to back up under key 'vnAppSettingsBkup' " + e);
   };
 };
 
@@ -277,6 +277,8 @@ function bkupAppSettings() {
 var app_settings_array = [];
 initializeSettingArray();
 
+// app settings has evolved to contain what might better be thought of as app state
+// maybe TODO, formalize app state separately, but this here works OK for now
 function initializeSettingArray() {
   let app_settings_object = {
     app_version_from_serviceworker: "unknown",
@@ -375,7 +377,7 @@ document.addEventListener('visibilitychange', function() {
     }
 
     // wait till app state fully retrieved
-    await waitForAppState();
+    await waitTillAllArraysRestored();
 
     const params = new URLSearchParams(window.location.search);
     const code = params.get('code');
@@ -393,7 +395,7 @@ document.addEventListener('visibilitychange', function() {
     showMainScreen();
  });
  
- function waitForAppState() {
+ function waitTillAllArraysRestored() {
   return new Promise(function(resolve) {
     function check() {
       console.log(timeCtRetrieve + "ms, sitesRetrieved=" + sitesRetrieved + " sppRetrieved=" + sppRetrieved 
