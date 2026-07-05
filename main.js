@@ -1,6 +1,6 @@
 "use strict";
 let iNatConfig = null; // declared here, accessible everywhere inside the IIFE
-  
+
 // the following is needed for the serviceworker registration and scope
 // it will become 'vegnab-webapp' for the public version
 // or 'dev-vegnab' for the development version
@@ -290,6 +290,7 @@ function initializeSettingArray() {
     sentDataFormat: "fmtCsv",
     emailToSendTo: "",
     region_code: "OR",
+    // TODO refactor, distinguish app_state from app_settings
     current_modal_id: "", // modals such as Placeholder, WaitForLocation, and AuxData that 
     // can have data in intermediate states use; other modals ignore
     current_site_id: "",
@@ -306,7 +307,22 @@ function initializeSettingArray() {
   //  retrieved as a reference from cur_ph_id
   //  first created incomplete
   // some fields filled in by user, some by GPS acquire
-  // incomplete placehold will be deleted if info screen dismissed without finishing
+  // incomplete placeholder will be deleted if info screen dismissed without finishing
+  
+    // for iNat sync
+    // After successful PKCE exchange:
+    inat_access_token: "",  // short-lived, used to get JWT
+    inat_jwt: "",  // what API calls actually use
+    inat_jwt_expires: undefined,  // Unix timestamp, JWTs expire ~24hrs e.g. 1234567890
+    inat_username: "",  // display purposes, confirm who's logged in e.g. rickshory
+    inat_user_id: undefined,  // numeric, useful for API queries scoped to this user, e.g. nnnnn
+    // for PKCE handshake, temporary values needed during login flow but can discard afterward:
+    javascriptinat_pkce_verifier: "",  // generated at login start, needed at token exchange
+    inat_oauth_state: "",  // CSRF protection, checked when redirect returns
+    // last two only need to survive long enough to complete the redirect round-trip from 
+    //  "user clicks login" to "code exchanged for token." 
+    //  store before redirecting to iNat, read back when the ?code= returns, then they can be cleared.
+
   };
   if (app_settings_array.length == 0) {
     app_settings_array.push(app_settings_object);
