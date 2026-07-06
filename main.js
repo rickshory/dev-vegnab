@@ -2574,12 +2574,20 @@ vnSyncINatScreen.addEventListener('shown.bs.modal', function (event) {
   document.getElementById("ph_sync_list").innerHTML = ph_sync_list_html;
 });
 
+document.getElementById('btn-sync-inat').addEventListener('click', syncPhsToINat);
+
+function syncPhsToINat() {
+  // pre-check if there are any placeholders, etc.
+  initiateInatSync();
+} // end of fn syncPhsToINat
 
 async function initiateInatSync() {
   const reachable = await checkInatConnectivity();
   if (!reachable) {
     showMessage('iNat sync requires internet connectivity. Please try when connected.');
     return;
+  } else {
+    showMessage('iNat connectivity tested good.');
   }
   // proceed with sync
 }
