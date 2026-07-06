@@ -1,4 +1,5 @@
 "use strict";
+
 let iNatConfig = null; // declared here, accessible everywhere inside the IIFE
 
 // the following is needed for the serviceworker registration and scope
