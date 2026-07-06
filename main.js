@@ -2574,6 +2574,35 @@ vnSyncINatScreen.addEventListener('shown.bs.modal', function (event) {
   document.getElementById("ph_sync_list").innerHTML = ph_sync_list_html;
 });
 
+
+async function initiateInatSync() {
+  const reachable = await checkInatConnectivity();
+  if (!reachable) {
+    showMessage('iNat sync requires internet connectivity. Please try when connected.');
+    return;
+  }
+  // proceed with sync
+}
+
+async function checkInatConnectivity() {
+  try {
+    const response = await fetch('https://api.inaturalist.org/v1/taxa?q=test&per_page=1', 
+      {method: 'HEAD', // or GET, HEAD is lighter
+       signal: AbortSignal.timeout(5000)}); // 5 second timeout
+    return response.ok;
+  } catch {
+    return false;
+  }
+}
+
+// stubs in case needed
+window.addEventListener('online', () => {
+  // optionally prompt: "You're connected — sync pending iNat observations?"
+});
+window.addEventListener('offline', () => {
+  // update UI to show sync unavailable
+});
+
 vnSendDataScreen.addEventListener('shown.bs.modal', function (event) {
 //  alert("in vnSendDataScreen 'shown.bs.modal'");
 	if (site_info_array.length == 0) {
