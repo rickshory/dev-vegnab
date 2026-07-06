@@ -61,7 +61,7 @@
               iNaturalist
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarINatDropdown">
-              <li><a class="dropdown-item" href="#vnUnderConstructionScreen" data-bs-toggle="modal">
+              <li><a class="dropdown-item" href="#vnSyncINatScreen" data-bs-toggle="modal">
                 <h3>Placeholders -> Observations</h3></a></a></li>
               <li><a class="dropdown-item" href="#vnINatAboutScreen" data-bs-toggle="modal">
                 <h3>About</h3></a></li>
@@ -627,6 +627,35 @@
     <!-- end modal, wait for accuracy -->
 
 
+    <!-- begin modal, iNat sync -->
+    <div id="vnSyncINatScreen" class="modal inat_sync_screen" role="dialog">
+      <div class="modal-dialog modal-fullscreen-sm-down modal-dialog-scrollable">
+        <div class="modal-content">
+
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h3>Make iNaturalist observations from Placeholders</h3>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+            <form id="send-form" autocomplete="off">
+              <div class="form-floating mb-3 mt-3">
+                <div class="row"> <!-- first row, 'sync' button -->
+                  <button type="button" class="btn btn-primary btn-xl"
+                      name="btn-sync-inat"
+                      id="btn-sync-inat">Sync
+                  </button>
+                </div> <!-- end of first row, 'sync' button -->
+              </div> <!-- end of form-floating -->
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- end of modal, iNat sync-->
+
     <!-- begin modal, iNat, About -->
     <div id="vnINatAboutScreen" class="modal">
       <div class="modal-dialog modal-fullscreen-sm-down">
@@ -1062,7 +1091,7 @@
           <div class="modal-body">
             <div id="about_text">
               <p>
-                VegNab is a web app for collecting vegetation data. It's like a notebook, that 
+                VegNab is a web app for collecting vegetation data. It's like a notebook that 
                 helps you out in various ways: It lets you quickly enter correct spellings, 
                 by searching on scientific name or common name. It automatically gets a 
                 timestamp and GPS location for each item. It puts species from your local 
