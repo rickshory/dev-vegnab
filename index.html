@@ -642,12 +642,22 @@
           <div class="modal-body">
             <form id="send-form" autocomplete="off">
               <div class="form-floating mb-3 mt-3">
+                <div class="row"> <!-- temp row, not working msg -->
+                  (NOT IMPLEMENTED YET)
+                </div> <!-- end of temp row -->
                 <div class="row"> <!-- first row, 'sync' button -->
                   <button type="button" class="btn btn-primary btn-xl"
                       name="btn-sync-inat"
                       id="btn-sync-inat">Sync
                   </button>
                 </div> <!-- end of first row, 'sync' button -->
+                <div class="row"> <!-- 2md row, placeholders list -->
+                  <div class="placeholders_sync_list">
+                    <!-- list will be filled on-the-fly -->
+                    <ul id="ph_sync_list" class="list-unstyled">
+                    </ul>
+                  </div>                  
+                </div> <!-- end of 2nd row -->
               </div> <!-- end of form-floating -->
             </form>
           </div>
@@ -712,8 +722,6 @@
       </div>
     </div>
     <!-- end of modal, iNat, About -->
-
-
 
     <!-- begin modal, send site data -->
     <div id="vnSendDataScreen" class="modal send_data_screen" role="dialog">

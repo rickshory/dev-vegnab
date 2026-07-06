@@ -2560,6 +2560,20 @@ document.getElementById('btn-cancel-auxdata').addEventListener('click', function
   bootstrap.Modal.getOrCreateInstance(document.getElementById('vnAuxDataEntryScreen')).hide();
 });
 
+vnSyncINatScreen.addEventListener('shown.bs.modal', function (event) {
+  let ph_sync_list_html = "";
+  if (placeholders_array.length == 0) {
+    ph_sync_list_html = '<li>(No placeholders yet)</li>';
+  } else {
+    placeholders_array.forEach(ph => {
+      ph_sync_list_html += '\n<li class="ph_title" id="'
+        + encodeURIComponent(ph.code)+ '">\n'
+        + ph.code + ': ' + ph.keywords.join(" ")  + '</li>';
+    });
+  };
+  document.getElementById("ph_sync_list").innerHTML = ph_sync_list_html;
+});
+
 vnSendDataScreen.addEventListener('shown.bs.modal', function (event) {
 //  alert("in vnSendDataScreen 'shown.bs.modal'");
 	if (site_info_array.length == 0) {
