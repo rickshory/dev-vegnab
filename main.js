@@ -2577,11 +2577,13 @@ vnSyncINatScreen.addEventListener('shown.bs.modal', function (event) {
 document.getElementById('btn-sync-inat').addEventListener('click', syncPhsToINat);
 
 function syncPhsToINat() {
+  console.log('in "syncPhsToINat" fn');
   // pre-check if there are any placeholders, etc.
   initiateInatSync();
 } // end of fn syncPhsToINat
 
 async function initiateInatSync() {
+  console.log('in "initiateInatSync" fn');
   const reachable = await checkInatConnectivity();
   if (!reachable) {
     showMessage('iNat sync requires internet connectivity. Please try when connected.');
@@ -2593,6 +2595,7 @@ async function initiateInatSync() {
 }
 
 async function checkInatConnectivity() {
+  console.log('in "checkInatConnectivity" fn');
   try {
     const response = await fetch('https://api.inaturalist.org/v1/taxa?q=test&per_page=1', 
       {method: 'HEAD', // or GET, HEAD is lighter
