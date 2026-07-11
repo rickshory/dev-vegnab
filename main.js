@@ -2586,10 +2586,10 @@ async function initiateInatSync() {
   console.log('in "initiateInatSync" fn');
   const reachable = await checkInatConnectivity();
   if (!reachable) {
-    showMessage('iNat sync requires internet connectivity. Please try when connected.');
+    alert('iNat sync requires internet connectivity. Please try when connected.');
     return;
   } else {
-    showMessage('iNat connectivity tested good.');
+    alert('iNat connectivity tested good.');
   }
   // proceed with sync
 }
