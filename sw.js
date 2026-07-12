@@ -145,19 +145,23 @@ self.addEventListener('fetch', (e) => {
         return fetch(e.request.clone()).then((response) => {
           console.log('  Response for %s from network is: %O',
             e.request.url, response);
-
-          if (response.status < 400) {
-            // This avoids caching responses that we know are errors
-            //(i.e. HTTP status code of 4xx or 5xx).
-            console.log('  Caching the response to', e.request.url);
-            // We call .clone() on the response to save a copy of it to the
-            // cache. By doing so, we get to keep the original response object
-            // which we will return back to the controlled page.
-            // (see https://developer.mozilla.org/en-US/docs/Web/API/Request/clone)
-            cache.put(e.request, response.clone());
+          if (e.request.url.startsWith(self.location.origin)) {
+            // Only cache same-origin requests
+            if (response.status < 400) {
+              // This avoids caching responses that we know are errors
+              //(i.e. HTTP status code of 4xx or 5xx).
+              console.log('  Caching the response to', e.request.url);
+              // We call .clone() on the response to save a copy of it to the
+              // cache. By doing so, we get to keep the original response object
+              // which we will return back to the controlled page.
+              // (see https://developer.mozilla.org/en-US/docs/Web/API/Request/clone)
+              cache.put(e.request, response.clone());
+            } else {
+              console.log(' Status >= 400, not caching the response to', e.request.url);
+            }
           } else {
-            console.log('  Not caching the response to', e.request.url);
-          }
+            console.log(' Skipping cache for cross-origin request:', e.request.url);
+          }            
 
           // Return the original response object, which will be used to fulfill the resource request.
           return response;
